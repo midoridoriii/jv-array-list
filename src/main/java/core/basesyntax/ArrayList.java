@@ -1,4 +1,5 @@
 package core.basesyntax;
+
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -22,15 +23,15 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void ensureCapacity( int minCapacity) {
+    private void ensureCapacity(int minCapacity) {
         if (minCapacity > elements.length) {
             int newCapacity = elements.length + elements.length / 2;
             if (newCapacity < minCapacity) {
                 newCapacity = minCapacity;
             }
-                Object[] newArray = new Object[newCapacity];
-                System.arraycopy(elements, 0, newArray, 0, size);
-                elements = newArray;
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
         }
     }
 
@@ -77,7 +78,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexForAccess(index);
-        Object value = elements[index];
+        final Object value = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
         elements[size - 1] = null;
         size--;
@@ -88,13 +89,17 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == null) {
-                if (elements[i] == null) return remove(i);
+                if (elements[i] == null) {
+                    return remove(i);
+                }
             } else {
-                if (elements[i].equals(element)) return remove(i);
+                if (elements[i] != null && elements[i].equals(element)) {
+                    return remove(i);
+                }
             }
-            }
-        throw new NoSuchElementException("Element not found in the list.");
         }
+        throw new NoSuchElementException("Element not found in the list.");
+    }
 
     @Override
     public int size() {
